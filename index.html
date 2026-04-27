@@ -5,26 +5,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Nikogym">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#f2f2f7">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23000000'/%3E%3Ctext x='90' y='118' font-size='72' font-weight='700' font-family='-apple-system,SF Pro Display,sans-serif' text-anchor='middle' fill='%23ff6b1a' letter-spacing='-2'%3EN%3C/text%3E%3C/svg%3E">
 <title>Nikogym</title>
 <style>
   :root {
-    --bg: #000000;
-    --bg-elevated: #1c1c1e;
-    --bg-elevated-2: #2c2c2e;
-    --separator: rgba(255,255,255,0.08);
-    --separator-strong: rgba(255,255,255,0.15);
-    --text: #ffffff;
-    --text-secondary: #98989f;
-    --text-tertiary: #6e6e73;
+    --bg: #f2f2f7;
+    --bg-elevated: #ffffff;
+    --bg-elevated-2: #e5e5ea;
+    --separator: rgba(0,0,0,0.08);
+    --separator-strong: rgba(0,0,0,0.15);
+    --text: #1c1c1e;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #a1a1a6;
     --orange: #ff6b1a;
     --orange-bright: #ff8c42;
-    --orange-dim: rgba(255,107,26,0.15);
-    --green: #30d158;
-    --red: #ff453a;
+    --orange-dim: rgba(255,107,26,0.12);
+    --green: #34c759;
+    --red: #ff3b30;
   }
   * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
   body {
@@ -97,20 +97,22 @@ gap: 8px;
 }
 .tab {
 flex: 1;
-padding: 7px 8px;
+padding: 9px 8px;
 text-align: center;
-font-size: 13px;
+font-size: 14px;
 font-weight: 600;
-color: var(–text-secondary);
+color: var(–text);
 cursor: pointer;
-border-radius: 8px;
-background: var(–bg-elevated);
+border-radius: 10px;
+background: var(–bg-elevated-2);
 transition: all 0.2s;
 letter-spacing: -0.01em;
+border: 1px solid var(–separator);
 }
 .tab.active {
 color: #000;
 background: var(–orange);
+border-color: var(–orange);
 }
 
 .content { padding: 8px 16px 20px; }
@@ -222,19 +224,21 @@ border: 1.5px dashed var(–separator-strong);
 margin-top: 16px;
 }
 .btn.add-exercise {
-background: transparent;
+background: var(–orange-dim);
 color: var(–orange);
-padding: 8px;
-font-size: 12px;
-margin-top: 6px;
-border-top: 0.5px solid var(–separator);
-border-radius: 0;
+padding: 10px;
+font-size: 13px;
+font-weight: 700;
+margin-top: 10px;
+border-radius: 10px;
+letter-spacing: -0.01em;
 }
+.btn.add-exercise:active { background: rgba(255,107,26,0.3); }
 
 .modal-backdrop {
 position: fixed;
 inset: 0;
-background: rgba(0,0,0,0.6);
+background: rgba(0,0,0,0.4);
 backdrop-filter: blur(8px);
 -webkit-backdrop-filter: blur(8px);
 display: flex;
@@ -643,10 +647,10 @@ font-size: 15px;
                 </li>`;
             }).join('')}
           </ul>
-          <button class="btn add-exercise" onclick="addExercise('${r.id}')">Añadir ejercicio</button>
+          <button class="btn add-exercise" onclick="addExercise('${r.id}')">＋ Añadir ejercicio</button>
         </div>`;
     });
-    html += `<button class="btn add-routine" onclick="addRoutine()">Nueva rutina</button>`;
+    html += `<button class="btn add-routine" onclick="addRoutine()">＋ Nueva rutina</button>`;
     return html;
   }
 
@@ -790,7 +794,7 @@ font-size: 15px;
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#2c2c2e',
+            backgroundColor: '#1c1c1e',
             titleColor: '#fff',
             bodyColor: '#fff',
             borderColor: '#ff6b1a',
@@ -804,13 +808,13 @@ font-size: 15px;
         scales: {
           y: {
             beginAtZero: false,
-            grid: { color: 'rgba(255,255,255,0.06)' },
-            ticks: { color: '#98989f', font: { size: 12, weight: '500' } }
+            grid: { color: 'rgba(0,0,0,0.06)' },
+            ticks: { color: '#6e6e73', font: { size: 12, weight: '500' } }
           },
           x: {
             grid: { display: false },
             ticks: {
-              color: '#98989f',
+              color: '#6e6e73',
               font: { size: 12, weight: '500' },
               maxRotation: 0,
               autoSkip: true,
@@ -915,12 +919,37 @@ font-size: 15px;
     const ex = r.exercises.find(x => x.id === eid);
     const last = getLastWeight(ex);
     const recent = [...(ex.history || [])].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+    const today = new Date().toISOString().split('T')[0];
+    const todayRecord = (ex.history || []).find(h => h.date.startsWith(today));
+
+    let referenceBlock = '';
+    if (todayRecord) {
+      referenceBlock = `
+        <div style="background:var(--orange-dim);border-radius:12px;padding:12px;margin-top:12px">
+          <p style="color:var(--orange);font-size:11px;margin:0;text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Ya registrado hoy</p>
+          <p style="color:var(--text);font-size:18px;margin:4px 0 0;font-weight:700">${todayRecord.weight} kg</p>
+          <p style="color:var(--text-secondary);font-size:11px;margin:4px 0 0">Si guardas otro peso, se reemplazará el de hoy</p>
+        </div>`;
+    } else if (last) {
+      referenceBlock = `
+        <div style="background:var(--bg-elevated-2);border-radius:12px;padding:12px;margin-top:12px">
+          <p style="color:var(--text-secondary);font-size:11px;margin:0;text-transform:uppercase;letter-spacing:0.08em;font-weight:600">Último registro</p>
+          <p style="color:var(--text);font-size:18px;margin:4px 0 0;font-weight:700">${last.weight} kg <span style="color:var(--text-secondary);font-size:13px;font-weight:500">· ${formatDate(last.date)}</span></p>
+        </div>`;
+    } else {
+      referenceBlock = `
+        <div style="background:var(--bg-elevated-2);border-radius:12px;padding:12px;margin-top:12px">
+          <p style="color:var(--text-secondary);font-size:13px;margin:0">Sin registros previos. Este será el primero.</p>
+        </div>`;
+    }
 
     showModal(ex.name, `
-      <p style="color:var(--text-secondary);font-size:13px;margin:4px 0 0;text-transform:uppercase;letter-spacing:0.06em;font-weight:600">${last ? 'Último: ' + last.weight + ' kg · ' + formatDate(last.date) : 'Primer registro'}</p>
-      <label>Peso de hoy (kg)</label>
-      <input id="m-weight" type="number" step="0.5" inputmode="decimal" placeholder="${last ? last.weight : 'Ej: 60'}" />
-      <button class="btn" onclick="saveWeight('${rid}','${eid}')">Guardar peso</button>
+      ${referenceBlock}
+      <label>Peso (kg)</label>
+      <input id="m-weight" type="number" step="0.5" inputmode="decimal" placeholder="${last ? 'Anterior: ' + last.weight : 'Ej: 60'}" />
+      <label>Fecha</label>
+      <input id="m-date" type="date" value="${today}" max="${today}" />
+      <button class="btn" onclick="saveWeight('${rid}','${eid}')">Guardar</button>
 
       ${recent.length > 0 ? `
         <div style="margin-top:24px">
@@ -946,13 +975,25 @@ font-size: 15px;
   window.saveWeight = function(rid, eid) {
     const w = parseFloat(document.getElementById('m-weight').value);
     if (isNaN(w) || w <= 0) { alert('Pon un peso válido'); return; }
+    const dateInput = document.getElementById('m-date');
+    const selectedDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+    if (!selectedDate) { alert('Pon una fecha válida'); return; }
+
     const r = routines.find(x => x.id === rid);
     const ex = r.exercises.find(x => x.id === eid);
     if (!ex.history) ex.history = [];
-    // Si ya hay un registro hoy, lo sobrescribe
+
+    // Si ya hay un registro en esa fecha, lo sobrescribe
+    const existing = ex.history.find(h => h.date.startsWith(selectedDate));
+    if (existing && !confirm('Ya hay un registro en esa fecha (' + existing.weight + ' kg). ¿Quieres reemplazarlo?')) return;
+
+    ex.history = ex.history.filter(h => !h.date.startsWith(selectedDate));
+    // Conservar la hora actual si es hoy, mediodía si es otra fecha
     const today = new Date().toISOString().split('T')[0];
-    ex.history = ex.history.filter(h => !h.date.startsWith(today));
-    ex.history.push({ date: new Date().toISOString(), weight: w });
+    const isoDate = selectedDate === today
+      ? new Date().toISOString()
+      : selectedDate + 'T12:00:00.000Z';
+    ex.history.push({ date: isoDate, weight: w });
     saveData();
     closeModal();
     render();
