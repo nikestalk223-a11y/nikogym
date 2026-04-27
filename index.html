@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nikogym">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23000000'/%3E%3Ctext x='90' y='118' font-size='72' font-weight='700' font-family='-apple-system,SF Pro Display,sans-serif' text-anchor='middle' fill='%23ff6b1a' letter-spacing='-2'%3EN%3C/text%3E%3C/svg%3E">
+<title>Nikogym</title>
+<style>
+  :root {
+    --bg: #000000;
+    --bg-elevated: #1c1c1e;
+    --bg-elevated-2: #2c2c2e;
+    --separator: rgba(255,255,255,0.08);
+    --separator-strong: rgba(255,255,255,0.15);
+    --text: #ffffff;
+    --text-secondary: #98989f;
+    --text-tertiary: #6e6e73;
+    --orange: #ff6b1a;
+    --orange-bright: #ff8c42;
+    --orange-dim: rgba(255,107,26,0.15);
+    --green: #30d158;
+    --red: #ff453a;
+  }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+    letter-spacing: -0.01em;
+  }
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .header {
+    background: var(--bg);
+    color: var(--text);
+    padding: calc(8px + env(safe-area-inset-top)) 20px 4px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .brand .accent { color: var(--orange); }
+  .menu-btn {
+    background: var(--bg-elevated);
+    border: none;
+    color: var(--text);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+  .header-sub {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+.tabs {
+display: flex;
+background: var(–bg);
+padding: 6px 20px 4px;
+position: sticky;
+top: calc(40px + env(safe-area-inset-top));
+z-index: 9;
+gap: 8px;
+}
+.tab {
+flex: 1;
+padding: 7px 8px;
+text-align: center;
+font-size: 13px;
+font-weight: 600;
+color: var(–text-secondary);
+cursor: pointer;
+border-radius: 8px;
+background: var(–bg-elevated);
+transition: all 0.2s;
+letter-spacing: -0.01em;
+}
+.tab.active {
+color: #000;
+background: var(–orange);
+}
+
+.content { padding: 8px 16px 20px; }
+
+.routine-card {
+background: var(–bg-elevated);
+border-radius: 14px;
+padding: 10px 12px 8px;
+margin-bottom: 8px;
+}
+.routine-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 4px;
+}
+.routine-title {
+font-size: 16px;
+font-weight: 700;
+margin: 0;
+letter-spacing: -0.02em;
+color: var(–orange);
+}
+.routine-sub {
+margin: 0 0 0 8px;
+font-size: 10px;
+color: var(–text-secondary);
+text-transform: uppercase;
+letter-spacing: 0.06em;
+font-weight: 600;
+display: inline;
+}
+.routine-actions { display: flex; gap: 6px; }
+.icon-btn {
+background: var(–bg-elevated-2);
+border: none;
+width: 30px;
+height: 30px;
+border-radius: 50%;
+cursor: pointer;
+font-size: 13px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(–text-secondary);
+font-weight: 600;
+}
+.icon-btn:active { background: var(–separator-strong); }
+.icon-btn.danger { color: var(–red); }
+
+.exercise-list {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+.exercise-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 4px 0;
+border-bottom: 0.5px solid var(–separator);
+cursor: pointer;
+}
+.exercise-item:last-of-type { border-bottom: none; }
+.exercise-name {
+font-size: 13px;
+font-weight: 500;
+flex: 1;
+letter-spacing: -0.01em;
+}
+.exercise-weight {
+font-size: 12px;
+font-weight: 600;
+color: var(–text-secondary);
+font-variant-numeric: tabular-nums;
+letter-spacing: -0.01em;
+}
+.exercise-weight.recent { color: var(–orange); }
+.exercise-weight.empty { color: var(–text-tertiary); }
+
+.btn {
+display: block;
+width: 100%;
+padding: 14px;
+background: var(–orange);
+color: #000;
+border: none;
+border-radius: 14px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+margin-top: 12px;
+letter-spacing: -0.01em;
+font-family: inherit;
+}
+.btn:active { background: var(–orange-bright); }
+.btn.secondary {
+background: var(–bg-elevated-2);
+color: var(–text);
+}
+.btn.danger-text {
+background: var(–bg-elevated-2);
+color: var(–red);
+}
+.btn.add-routine {
+background: transparent;
+color: var(–orange);
+border: 1.5px dashed var(–separator-strong);
+margin-top: 16px;
+}
+.btn.add-exercise {
+background: transparent;
+color: var(–orange);
+padding: 4px;
+font-size: 11px;
+margin-top: 4px;
+}
+
+.modal-backdrop {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.6);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+display: flex;
+align-items: flex-end;
+justify-content: center;
+z-index: 100;
+animation: fadeIn 0.2s;
+}
+@keyframes fadeIn { from { opacity: 0; } }
+.modal {
+background: var(–bg-elevated);
+width: 100%;
+max-width: 480px;
+border-radius: 24px 24px 0 0;
+padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+max-height: 85vh;
+overflow-y: auto;
+animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } }
+.modal h2 {
+margin: 0 0 4px;
+font-size: 22px;
+font-weight: 700;
+letter-spacing: -0.02em;
+}
+.modal label {
+display: block;
+font-size: 12px;
+color: var(–text-secondary);
+margin-bottom: 6px;
+margin-top: 16px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+font-weight: 600;
+}
+.modal input {
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 12px;
+font-size: 17px;
+background: var(–bg-elevated-2);
+color: var(–text);
+-webkit-appearance: none;
+font-family: inherit;
+letter-spacing: -0.01em;
+}
+.modal input:focus {
+outline: 2px solid var(–orange);
+outline-offset: 0;
+}
+
+.empty {
+text-align: center;
+padding: 80px 20px;
+color: var(–text-secondary);
+}
+.empty p { margin: 4px 0; font-size: 15px; }
+.empty p strong { color: var(–text); font-size: 18px; font-weight: 700; }
+
+.history-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 0;
+border-bottom: 0.5px solid var(–separator);
+font-size: 15px;
+}
+.history-item:last-child { border-bottom: none; }
+.history-date { color: var(–text-secondary); font-weight: 500; }
+.history-weight { font-weight: 600; font-variant-numeric: tabular-nums; }
+.delta-up { color: var(–green); font-size: 13px; margin-left: 6px; font-weight: 600; }
+.delta-down { color: var(–red); font-size: 13px; margin-left: 6px; font-weight: 600; }
+.delta-same { color: var(–text-tertiary); font-size: 13px; margin-left: 6px; font-weight: 600; }
+
+.chart-container {
+background: var(–bg-elevated);
+border-radius: 18px;
+padding: 18px;
+margin-top: 14px;
+}
+.chart-title {
+font-size: 18px;
+font-weight: 700;
+margin: 0;
+letter-spacing: -0.02em;
+}
+.chart-subtitle {
+font-size: 13px;
+color: var(–text-secondary);
+margin: 2px 0 16px;
+font-weight: 500;
+}
+
+.stat-row {
+display: flex;
+gap: 10px;
+margin-bottom: 14px;
+}
+.stat-card {
+flex: 1;
+background: var(–bg-elevated);
+border-radius: 16px;
+padding: 14px 12px;
+text-align: center;
+}
+.stat-label {
+font-size: 11px;
+color: var(–text-secondary);
+text-transform: uppercase;
+letter-spacing: 0.08em;
+font-weight: 600;
+}
+.stat-value {
+font-size: 24px;
+font-weight: 700;
+margin-top: 4px;
+letter-spacing: -0.02em;
+color: var(–orange);
+font-variant-numeric: tabular-nums;
+}
+
+.selector {
+width: 100%;
+padding: 14px 16px;
+border: none;
+border-radius: 14px;
+font-size: 15px;
+font-weight: 600;
+background: var(–bg-elevated);
+color: var(–text);
+margin-bottom: 6px;
+-webkit-appearance: none;
+background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ viewBox=‘0 0 12 12’%3E%3Cpath fill=’%23ff6b1a’ d=‘M6 9L1 4h10z’/%3E%3C/svg%3E”);
+background-repeat: no-repeat;
+background-position: right 16px center;
+padding-right: 40px;
+font-family: inherit;
+letter-spacing: -0.01em;
+}
+
+.summary-row {
+display: flex;
+justify-content: space-around;
+margin-top: 16px;
+padding-top: 16px;
+border-top: 0.5px solid var(–separator);
+}
+.summary-cell { text-align: center; }
+.summary-cell-label {
+color: var(–text-secondary);
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+font-weight: 600;
+}
+.summary-cell-value {
+font-weight: 700;
+font-size: 17px;
+margin-top: 2px;
+letter-spacing: -0.01em;
+font-variant-numeric: tabular-nums;
+}
+.summary-cell-value.highlight { color: var(–orange); }
+
+.loading {
+text-align: center;
+padding: 60px;
+color: var(–text-secondary);
+font-size: 15px;
+}
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="header-row">
+      <h1 class="brand">Niko<span class="accent">gym</span></h1>
+      <button class="menu-btn" onclick="openMenu()" aria-label="Menú">···</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="routines">Rutinas</div>
+    <div class="tab" data-tab="progress">Progreso</div>
+  </div>
+
+  <div class="content" id="content">
+    <div class="loading">Cargando...</div>
+  </div>
+</div>
+
+<script>
+  // Estado global
+  let routines = [];
+  let currentTab = 'routines';
+  let isLoading = true;
+
+  // Rutinas por defecto si es la primera vez
+  const DEFAULT_ROUTINES = [
+    {
+      id: 'a',
+      name: 'Push',
+      subtitle: 'Pecho · Hombros · Tríceps',
+      exercises: [
+        { id: 'a1', name: 'Press banca', history: [] },
+        { id: 'a2', name: 'Press inclinado mancuernas', history: [] },
+        { id: 'a3', name: 'Press militar', history: [] },
+        { id: 'a4', name: 'Elevaciones laterales', history: [] },
+        { id: 'a5', name: 'Fondos en paralelas', history: [] },
+        { id: 'a6', name: 'Extensiones tríceps polea', history: [] }
+      ]
+    },
+    {
+      id: 'b',
+      name: 'Pull',
+      subtitle: 'Espalda · Bíceps',
+      exercises: [
+        { id: 'b1', name: 'Dominadas', history: [] },
+        { id: 'b2', name: 'Remo con barra', history: [] },
+        { id: 'b3', name: 'Jalón al pecho', history: [] },
+        { id: 'b4', name: 'Remo en polea baja', history: [] },
+        { id: 'b5', name: 'Curl con barra', history: [] },
+        { id: 'b6', name: 'Curl martillo', history: [] }
+      ]
+    },
+    {
+      id: 'c',
+      name: 'Legs',
+      subtitle: 'Piernas · Glúteos',
+      exercises: [
+        { id: 'c1', name: 'Sentadilla', history: [] },
+        { id: 'c2', name: 'Peso muerto rumano', history: [] },
+        { id: 'c3', name: 'Prensa', history: [] },
+        { id: 'c4', name: 'Extensión cuádriceps', history: [] },
+        { id: 'c5', name: 'Curl femoral', history: [] },
+        { id: 'c6', name: 'Gemelos de pie', history: [] }
+      ]
+    }
+  ];
+
+  // ===== ALMACENAMIENTO (localStorage) =====
+  const STORAGE_KEY = 'gym_routines_v1';
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        routines = JSON.parse(raw);
+      } else {
+        routines = DEFAULT_ROUTINES;
+        saveData();
+      }
+    } catch (e) {
+      console.error('Error cargando:', e);
+      routines = DEFAULT_ROUTINES;
+    }
+    isLoading = false;
+    render();
+  }
+
+  function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(routines));
+    } catch (e) {
+      console.error('Error guardando:', e);
+      alert('No se pudieron guardar los datos. Si has añadido la app a la pantalla de inicio, asegúrate de no estar en modo navegación privada.');
+    }
+  }
+
+  // Exportar/importar copia de seguridad
+  window.exportData = function() {
+    const data = JSON.stringify(routines, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mi-gimnasio-backup-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  window.importData = function() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,application/json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          if (!Array.isArray(imported)) throw new Error('Formato inválido');
+          if (!confirm('Esto reemplazará todas tus rutinas actuales. ¿Continuar?')) return;
+          routines = imported;
+          saveData();
+          closeModal();
+          render();
+          alert('Datos importados correctamente');
+        } catch (err) {
+          alert('Error al importar: archivo no válido');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
+  window.openMenu = function() {
+    showModal('Ajustes', `
+      <p style="font-size:13px;color:var(--text-secondary);margin:4px 0 16px">Tus datos se guardan en este dispositivo. Haz copias de seguridad de vez en cuando.</p>
+      <button class="btn" onclick="exportData()">Exportar copia de seguridad</button>
+      <button class="btn secondary" onclick="importData()">Importar copia de seguridad</button>
+      <button class="btn danger-text" onclick="resetAll()">Borrar todos los datos</button>
+      <button class="btn secondary" onclick="closeModal()">Cerrar</button>
+    `);
+  };
+
+  window.resetAll = function() {
+    if (!confirm('Esto borrará TODAS tus rutinas e historial. ¿Estás seguro?')) return;
+    if (!confirm('¿De verdad? Esta acción no se puede deshacer.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    routines = DEFAULT_ROUTINES;
+    saveData();
+    closeModal();
+    render();
+  };
+
+  // ===== UTILIDADES =====
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    const today = new Date();
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+    if (d.toDateString() === today.toDateString()) return 'Hoy';
+    if (d.toDateString() === yesterday.toDateString()) return 'Ayer';
+    return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: d.getFullYear() !== today.getFullYear() ? 'numeric' : undefined });
+  }
+
+  function getLastWeight(exercise) {
+    if (!exercise.history || exercise.history.length === 0) return null;
+    const sorted = [...exercise.history].sort((a, b) => new Date(b.date) - new Date(a.date));
+    return sorted[0];
+  }
+
+  function isRecent(dateIso) {
+    const d = new Date(dateIso);
+    const now = new Date();
+    const diff = (now - d) / (1000 * 60 * 60 * 24);
+    return diff < 3;
+  }
+
+  // ===== TABS =====
+  document.querySelectorAll('.tab').forEach(t => {
+    t.onclick = () => {
+      currentTab = t.dataset.tab;
+      document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
+      render();
+    };
+  });
+
+  // ===== RENDER =====
+  function render() {
+    if (isLoading) return;
+    const c = document.getElementById('content');
+    if (currentTab === 'routines') c.innerHTML = renderRoutines();
+    else c.innerHTML = renderProgress();
+    attachHandlers();
+  }
+
+  function renderRoutines() {
+    if (routines.length === 0) {
+      return `
+        <div class="empty">
+          <p><strong>Sin rutinas</strong></p>
+          <p>Crea tu primera rutina para empezar</p>
+          <button class="btn" onclick="addRoutine()" style="max-width:240px;margin:20px auto 0">Crear rutina</button>
+        </div>`;
+    }
+    let html = '';
+    routines.forEach(r => {
+      html += `
+        <div class="routine-card">
+          <div class="routine-header">
+            <div style="display:flex;align-items:baseline;gap:8px;flex:1;min-width:0">
+              <h3 class="routine-title">${escapeHtml(r.name)}</h3>
+              ${r.subtitle ? `<p class="routine-sub" style="margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(r.subtitle)}</p>` : ''}
+            </div>
+            <div class="routine-actions">
+              <button class="icon-btn" onclick="editRoutine('${r.id}')" aria-label="Editar" style="width:auto;padding:0 10px;height:24px;border-radius:12px;font-size:10px;letter-spacing:0.04em;text-transform:uppercase">Editar</button>
+            </div>
+          </div>
+          <ul class="exercise-list">
+            ${r.exercises.map(ex => {
+              const last = getLastWeight(ex);
+              const recent = last && isRecent(last.date);
+              const cls = !last ? 'empty' : (recent ? 'recent' : '');
+              return `
+                <li class="exercise-item" onclick="openExercise('${r.id}','${ex.id}')">
+                  <span class="exercise-name">${escapeHtml(ex.name)}</span>
+                  <span class="exercise-weight ${cls}">
+                    ${last ? last.weight + ' kg' : '—'}
+                  </span>
+                </li>`;
+            }).join('')}
+          </ul>
+          <button class="btn add-exercise" onclick="addExercise('${r.id}')">Añadir ejercicio</button>
+        </div>`;
+    });
+    html += `<button class="btn add-routine" onclick="addRoutine()">Nueva rutina</button>`;
+    return html;
+  }
+
+  function renderProgress() {
+    const allExercises = [];
+    routines.forEach(r => r.exercises.forEach(ex => {
+      if (ex.history && ex.history.length > 0) {
+        allExercises.push({ routine: r.name, ...ex });
+      }
+    }));
+
+    if (allExercises.length === 0) {
+      return `
+        <div class="empty">
+          <p><strong>Sin datos aún</strong></p>
+          <p>Registra pesos en tus ejercicios<br>para ver tu evolución aquí</p>
+        </div>`;
+    }
+
+    // Stats globales
+    const totalSessions = new Set();
+    let totalRecords = 0;
+    allExercises.forEach(ex => {
+      ex.history.forEach(h => {
+        totalSessions.add(h.date.split('T')[0]);
+        totalRecords++;
+      });
+    });
+
+    let html = `
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Sesiones</div>
+          <div class="stat-value">${totalSessions.size}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Registros</div>
+          <div class="stat-value">${totalRecords}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ejercicios</div>
+          <div class="stat-value">${allExercises.length}</div>
+        </div>
+      </div>
+      <select class="selector" id="exercise-selector">
+        ${allExercises.map((ex, i) => `<option value="${i}">${escapeHtml(ex.routine)} · ${escapeHtml(ex.name)}</option>`).join('')}
+      </select>
+      <div id="chart-area"></div>
+    `;
+    setTimeout(() => {
+      const sel = document.getElementById('exercise-selector');
+      if (sel) {
+        sel.onchange = () => renderChart(allExercises[parseInt(sel.value)]);
+        renderChart(allExercises[0]);
+      }
+    }, 0);
+    return html;
+  }
+
+  function renderChart(exercise) {
+    const area = document.getElementById('chart-area');
+    if (!area || !exercise) return;
+
+    const sorted = [...exercise.history].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const max = Math.max(...sorted.map(h => h.weight));
+    const min = Math.min(...sorted.map(h => h.weight));
+    const first = sorted[0].weight;
+    const last = sorted[sorted.length - 1].weight;
+    const diff = last - first;
+
+    area.innerHTML = `
+      <div class="chart-container">
+        <h3 class="chart-title">${escapeHtml(exercise.name)}</h3>
+        <p class="chart-subtitle">${exercise.history.length} registros · ${diff >= 0 ? '+' : ''}${diff.toFixed(1)} kg desde el inicio</p>
+        <div style="position:relative;width:100%;height:240px">
+          <canvas id="evolution-chart"></canvas>
+        </div>
+        <div class="summary-row">
+          <div class="summary-cell"><div class="summary-cell-label">Mínimo</div><div class="summary-cell-value">${min} kg</div></div>
+          <div class="summary-cell"><div class="summary-cell-label">Máximo</div><div class="summary-cell-value highlight">${max} kg</div></div>
+          <div class="summary-cell"><div class="summary-cell-label">Actual</div><div class="summary-cell-value">${last} kg</div></div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h3 class="chart-title">Historial</h3>
+        <div style="margin-top:8px">
+        ${[...sorted].reverse().map((h, i, arr) => {
+          const prev = arr[i + 1];
+          let delta = '';
+          if (prev) {
+            const d = h.weight - prev.weight;
+            if (d > 0) delta = `<span class="delta-up">↑ +${d.toFixed(1)}</span>`;
+            else if (d < 0) delta = `<span class="delta-down">↓ ${d.toFixed(1)}</span>`;
+            else delta = `<span class="delta-same">=</span>`;
+          }
+          return `
+            <div class="history-item" style="cursor:pointer" onclick="editRecord('${exercise.id}','${h.date}')">
+              <span class="history-date">${formatDate(h.date)}</span>
+              <span><span class="history-weight">${h.weight} kg</span>${delta}
+                <button class="icon-btn danger" style="margin-left:8px;width:26px;height:26px;font-size:14px;display:inline-flex" onclick="event.stopPropagation();deleteRecord('${exercise.id}','${h.date}')" aria-label="Eliminar">×</button>
+              </span>
+            </div>`;
+        }).join('')}
+        </div>
+      </div>
+    `;
+
+    // Dibujar gráfica con Chart.js
+    if (typeof Chart === 'undefined') {
+      loadChartJs(() => drawChart(sorted));
+    } else {
+      drawChart(sorted);
+    }
+  }
+
+  function drawChart(data) {
+    const ctx = document.getElementById('evolution-chart');
+    if (!ctx) return;
+    if (window._chart) window._chart.destroy();
+    window._chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(h => formatDate(h.date)),
+        datasets: [{
+          label: 'Peso (kg)',
+          data: data.map(h => h.weight),
+          borderColor: '#ff6b1a',
+          backgroundColor: 'rgba(255,107,26,0.15)',
+          tension: 0.35,
+          fill: true,
+          pointBackgroundColor: '#ff6b1a',
+          pointBorderColor: '#ff6b1a',
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          borderWidth: 2.5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#2c2c2e',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: '#ff6b1a',
+            borderWidth: 1,
+            padding: 10,
+            displayColors: false,
+            titleFont: { weight: '600', size: 13 },
+            bodyFont: { weight: '600', size: 13 }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: { color: 'rgba(255,255,255,0.06)' },
+            ticks: { color: '#98989f', font: { size: 12, weight: '500' } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: '#98989f',
+              font: { size: 12, weight: '500' },
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 6
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function loadChartJs(cb) {
+    if (document.getElementById('chartjs-script')) {
+      document.getElementById('chartjs-script').onload = cb;
+      return;
+    }
+    const s = document.createElement('script');
+    s.id = 'chartjs-script';
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+
+  // ===== ACCIONES =====
+  function attachHandlers() {}
+
+  window.addRoutine = function() {
+    showModal('Nueva rutina', `
+      <label>Nombre</label>
+      <input id="m-name" placeholder="Ej: Día D - Cardio" />
+      <label>Subtítulo (opcional)</label>
+      <input id="m-sub" placeholder="Ej: HIIT, abdominales" />
+      <button class="btn" onclick="saveNewRoutine()">Crear</button>
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    `);
+    setTimeout(() => document.getElementById('m-name').focus(), 100);
+  };
+
+  window.saveNewRoutine = function() {
+    const name = document.getElementById('m-name').value.trim();
+    const sub = document.getElementById('m-sub').value.trim();
+    if (!name) { alert('Pon un nombre'); return; }
+    routines.push({ id: uid(), name, subtitle: sub, exercises: [] });
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.editRoutine = function(rid) {
+    const r = routines.find(x => x.id === rid);
+    if (!r) return;
+    showModal('Editar rutina', `
+      <label>Nombre</label>
+      <input id="m-name" value="${escapeAttr(r.name)}" />
+      <label>Subtítulo</label>
+      <input id="m-sub" value="${escapeAttr(r.subtitle || '')}" />
+      <button class="btn" onclick="saveEditRoutine('${rid}')">Guardar</button>
+      <button class="btn danger-text" onclick="deleteRoutine('${rid}')">Eliminar rutina</button>
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    `);
+  };
+
+  window.saveEditRoutine = function(rid) {
+    const r = routines.find(x => x.id === rid);
+    r.name = document.getElementById('m-name').value.trim() || r.name;
+    r.subtitle = document.getElementById('m-sub').value.trim();
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.deleteRoutine = function(rid) {
+    if (!confirm('¿Eliminar esta rutina y todo su historial?')) return;
+    routines = routines.filter(x => x.id !== rid);
+    saveData();
+    render();
+  };
+
+  window.addExercise = function(rid) {
+    const r = routines.find(x => x.id === rid);
+    showModal('Nuevo ejercicio en ' + r.name, `
+      <label>Nombre del ejercicio</label>
+      <input id="m-name" placeholder="Ej: Press banca" />
+      <button class="btn" onclick="saveNewExercise('${rid}')">Añadir</button>
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    `);
+    setTimeout(() => document.getElementById('m-name').focus(), 100);
+  };
+
+  window.saveNewExercise = function(rid) {
+    const name = document.getElementById('m-name').value.trim();
+    if (!name) { alert('Pon un nombre'); return; }
+    const r = routines.find(x => x.id === rid);
+    r.exercises.push({ id: uid(), name, history: [] });
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.openExercise = function(rid, eid) {
+    const r = routines.find(x => x.id === rid);
+    const ex = r.exercises.find(x => x.id === eid);
+    const last = getLastWeight(ex);
+    const recent = [...(ex.history || [])].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+    showModal(ex.name, `
+      <p style="color:var(--text-secondary);font-size:13px;margin:4px 0 0;text-transform:uppercase;letter-spacing:0.06em;font-weight:600">${last ? 'Último: ' + last.weight + ' kg · ' + formatDate(last.date) : 'Primer registro'}</p>
+      <label>Peso de hoy (kg)</label>
+      <input id="m-weight" type="number" step="0.5" inputmode="decimal" placeholder="${last ? last.weight : 'Ej: 60'}" />
+      <button class="btn" onclick="saveWeight('${rid}','${eid}')">Guardar peso</button>
+
+      ${recent.length > 0 ? `
+        <div style="margin-top:24px">
+          <p class="header-sub" style="color:var(--text-secondary);margin:0 0 4px">Últimos registros</p>
+          ${recent.map(h => `
+            <div class="history-item" style="cursor:pointer" onclick="editRecord('${eid}','${h.date}','${rid}')">
+              <span class="history-date">${formatDate(h.date)}</span>
+              <span><span class="history-weight">${h.weight} kg</span>
+                <button class="icon-btn danger" style="margin-left:8px;width:26px;height:26px;font-size:14px;display:inline-flex" onclick="event.stopPropagation();deleteRecord('${eid}','${h.date}');closeModal();openExercise('${rid}','${eid}')" aria-label="Eliminar">×</button>
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <button class="btn secondary" style="margin-top:20px" onclick="renameExercise('${rid}','${eid}')">Renombrar ejercicio</button>
+      <button class="btn danger-text" onclick="deleteExercise('${rid}','${eid}')">Eliminar ejercicio</button>
+      <button class="btn secondary" onclick="closeModal()">Cerrar</button>
+    `);
+    setTimeout(() => document.getElementById('m-weight').focus(), 100);
+  };
+
+  window.saveWeight = function(rid, eid) {
+    const w = parseFloat(document.getElementById('m-weight').value);
+    if (isNaN(w) || w <= 0) { alert('Pon un peso válido'); return; }
+    const r = routines.find(x => x.id === rid);
+    const ex = r.exercises.find(x => x.id === eid);
+    if (!ex.history) ex.history = [];
+    // Si ya hay un registro hoy, lo sobrescribe
+    const today = new Date().toISOString().split('T')[0];
+    ex.history = ex.history.filter(h => !h.date.startsWith(today));
+    ex.history.push({ date: new Date().toISOString(), weight: w });
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.renameExercise = function(rid, eid) {
+    const r = routines.find(x => x.id === rid);
+    const ex = r.exercises.find(x => x.id === eid);
+    showModal('Renombrar ejercicio', `
+      <label>Nombre</label>
+      <input id="m-name" value="${escapeAttr(ex.name)}" />
+      <button class="btn" onclick="saveRenameExercise('${rid}','${eid}')">Guardar</button>
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    `);
+  };
+
+  window.saveRenameExercise = function(rid, eid) {
+    const r = routines.find(x => x.id === rid);
+    const ex = r.exercises.find(x => x.id === eid);
+    ex.name = document.getElementById('m-name').value.trim() || ex.name;
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.deleteExercise = function(rid, eid) {
+    if (!confirm('¿Eliminar este ejercicio y todo su historial?')) return;
+    const r = routines.find(x => x.id === rid);
+    r.exercises = r.exercises.filter(x => x.id !== eid);
+    saveData();
+    closeModal();
+    render();
+  };
+
+  window.editRecord = function(eid, dateIso, rid) {
+    let exercise = null;
+    let routine = null;
+    routines.forEach(r => {
+      const ex = r.exercises.find(x => x.id === eid);
+      if (ex) { exercise = ex; routine = r; }
+    });
+    if (!exercise) return;
+    const record = exercise.history.find(h => h.date === dateIso);
+    if (!record) return;
+    const dateOnly = record.date.split('T')[0];
+
+    showModal('Editar registro · ' + exercise.name, `
+      <label>Peso (kg)</label>
+      <input id="m-edit-weight" type="number" step="0.5" inputmode="decimal" value="${record.weight}" />
+      <label>Fecha</label>
+      <input id="m-edit-date" type="date" value="${dateOnly}" max="${new Date().toISOString().split('T')[0]}" />
+      <button class="btn" onclick="saveEditRecord('${eid}','${dateIso}','${rid || ''}')">Guardar cambios</button>
+      <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    `);
+  };
+
+  window.saveEditRecord = function(eid, oldDateIso, rid) {
+    const newWeight = parseFloat(document.getElementById('m-edit-weight').value);
+    const newDate = document.getElementById('m-edit-date').value;
+    if (isNaN(newWeight) || newWeight <= 0) { alert('Pon un peso válido'); return; }
+    if (!newDate) { alert('Pon una fecha válida'); return; }
+
+    routines.forEach(r => {
+      const ex = r.exercises.find(x => x.id === eid);
+      if (ex) {
+        const rec = ex.history.find(h => h.date === oldDateIso);
+        if (rec) {
+          // Si la fecha cambió, conservar la hora original; si no había, usar mediodía
+          const oldTime = oldDateIso.split('T')[1] || '12:00:00.000Z';
+          const newIso = newDate + 'T' + oldTime;
+          // Si ya existe otro registro en la nueva fecha (mismo día), eliminarlo para evitar duplicados
+          const newDayPrefix = newDate;
+          ex.history = ex.history.filter(h => h.date === oldDateIso || !h.date.startsWith(newDayPrefix));
+          rec.date = newIso;
+          rec.weight = newWeight;
+        }
+      }
+    });
+    saveData();
+    closeModal();
+    // Si veníamos del modal del ejercicio, volver a abrirlo
+    if (rid) openExercise(rid, eid);
+    else render();
+  };
+
+  window.deleteRecord = function(eid, dateIso) {
+    if (!confirm('¿Eliminar este registro?')) return;
+    routines.forEach(r => {
+      const ex = r.exercises.find(x => x.id === eid);
+      if (ex) ex.history = ex.history.filter(h => h.date !== dateIso);
+    });
+    saveData();
+    render();
+  };
+
+  // ===== MODALS =====
+  function showModal(title, content) {
+    closeModal();
+    const m = document.createElement('div');
+    m.className = 'modal-backdrop';
+    m.id = 'modal';
+    m.onclick = (e) => { if (e.target === m) closeModal(); };
+    m.innerHTML = `<div class="modal"><h2>${escapeHtml(title)}</h2>${content}</div>`;
+    document.body.appendChild(m);
+  }
+  window.closeModal = function() {
+    const m = document.getElementById('modal');
+    if (m) m.remove();
+  };
+
+  // ===== HELPERS =====
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  // Inicio
+  loadData();
+</script>
+
+</body>
+</html>
